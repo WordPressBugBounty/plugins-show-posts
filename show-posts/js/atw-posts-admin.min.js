@@ -1,0 +1,1 @@
+function wvrx_stopRKey(){var a=(a)?a:((event)?event:null);var b=(a.target)?a.target:((a.srcElement)?a.srcElement:null);if((a.keyCode==13)&&(b.type=="text")){return false}return true}document.onkeypress=wvrx_stopRKey;
