@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+// File refactored: 2026-03-28
+
 /*
 
 This code is Copyright 2011-2016 by Bruce E. Wampler, all rights reserved.
@@ -21,26 +24,26 @@ function atw_posts_admin_page() {
 ?>
 
 <div class="atw-wrap">
-    <h2>Weaver <?php echo $name;?> - Settings <?php atw_donate_button(); ?></h2>
+    <h2>Weaver <?php echo esc_html($name);?> - Settings <?php atw_donate_button(); ?></h2>
     <hr />
 
 <div id="tabwrap_plus" style="padding-left:5px;">
     <div id="tab-container-plus" class='yetii'>
 	<ul id="tab-container-plus-nav" class='yetii'>
 
-    <li><a href="#tab-showposts" title="Show Posts Shortcode"><?php echo(atw_posts_t_('Show Posts' /*a*/ )); ?></a></li>
+    <li><a href="#tab-showposts" title="Show Posts Shortcode"><?php echo(esc_html(atw_posts_t_('Show Posts' /*a*/ ))); ?></a></li>
 
-    <li ><a href="#tab-filters" title="Filters"><?php echo(atw_posts_t_('Filters' /*a*/ )); ?></a></li>
+    <li ><a href="#tab-filters" title="Filters"><?php echo(esc_html(atw_posts_t_('Filters' /*a*/ ))); ?></a></li>
 
-    <li><a href="#mt-tab-slider"  title="Slider"><?php echo(atw_posts_t_('Sliders' /*a*/ )); ?></a></li>
+    <li><a href="#mt-tab-slider"  title="Slider"><?php echo(esc_html(atw_posts_t_('Sliders' /*a*/ ))); ?></a></li>
 
 <?php   if (function_exists('atw_slider_installed')) { ?>
-    <li><a href="#mt-tab-gallery"  title="[gallery]/Lightbox"><?php echo(atw_posts_t_('[gallery]/Lightbox' /*a*/ )); ?></a></li>
+    <li><a href="#mt-tab-gallery"  title="[gallery]/Lightbox"><?php echo(esc_html(atw_posts_t_('[gallery]/Lightbox' /*a*/ ))); ?></a></li>
 <?php } ?>
 
-    <li ><a href="#tab-css" title="Style"><?php echo(atw_posts_t_('Custom CSS' /*a*/ )); ?></a></li>
+    <li ><a href="#tab-css" title="Style"><?php echo(esc_html(atw_posts_t_('Custom CSS' /*a*/ ))); ?></a></li>
 
-    <li ><a href="#tab-help" title="Style"><?php echo(atw_posts_t_('Quick Start Help' /*a*/ )); ?></a></li>
+    <li ><a href="#tab-help" title="Style"><?php echo(esc_html(atw_posts_t_('Quick Start Help' /*a*/ ))); ?></a></li>
 
 	</ul>
         <hr />
@@ -162,6 +165,7 @@ function atw_posts_submits() {
 
 
     foreach ( $actions as $functionName ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified in atw_posts_submitted()
         if ( isset( $_POST[$functionName] ) ) {
             if ( atw_posts_submitted( $functionName ) && function_exists( $functionName ) ) {
                 if ($functionName())
@@ -237,7 +241,7 @@ function atw_posts_add_qvalue($qarg, $add) {
             atw_posts_error_msg('Do not add duplicate values to query string: ' . $add . '. Ignored.');
         } else {
             atw_posts_set_filter_opt($qarg, str_replace(' ', '', $cur_arg . ',' . $add) );
-            //atw_posts_save_msg('Filter value field set. Click "Save Filter Options" to save new field value.');
+            //atw_posts_save_msg('Filter value field set. Click "Save Filter Options" to save new field value.'));
         }
     }
 }
@@ -265,9 +269,9 @@ function atw_posts_set_to_filter() {
     }
 
     atw_posts_setopt('current_filter',$selected);
-    //$name = atw_posts_get_filter_opt('name');
+    //$name = atw_posts_get_filter_opt('name'));
 
-    //atw_posts_save_msg('Filter field set: ' . $name . '. Click "Save Filter Options" to save settings for this filter.');
+    //atw_posts_save_msg('Filter field set: ' . $name . '. Click "Save Filter Options" to save settings for this filter.'));
     return true;
 }
 
@@ -427,12 +431,9 @@ function atw_donate_button() {
 	if ( true ) {
 		$img = WP_CONTENT_URL . '/plugins/show-posts/images/donate-button.png';
 	?>
-<div style="float:right;padding-right:30px;display:inline-block;"><div style="font-size:14px;font-weight:bold;display:inline-block;vertical-align: top;"><?php wp_kses_post(__('Like <em>Weaver Show Posts</em>? Please', 'weaver-xtreme' /*adm*/)); ?></div>&nbsp;&nbsp;<a href='//weavertheme.com/donate' target='_blank' alt='Please Donate' ><img src="<?php echo $img; ?>" alt="donate" style="max-height:28px;"/></a>
+<div style="float:right;padding-right:30px;display:inline-block;"><div style="font-size:14px;font-weight:bold;display:inline-block;vertical-align: top;"><?php wp_kses_post(__('Like <em>Weaver Show Posts</em>? Please', 'show-posts' /*adm*/)); ?></div>&nbsp;&nbsp;<a href='//weavertheme.com/donate' target='_blank' alt='Please Donate' ><img src="<?php echo wp_kses_post($img); ?>" alt="donate" style="max-height:28px;"/></a>
 </div>
 
 <?php }
 }
 
-
-
-?>

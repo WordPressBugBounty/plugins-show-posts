@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
 // ========================================= >>> atw_posts_select_filter <<< ===============================
 function atw_posts_style_admin() {
     // admin for style options...

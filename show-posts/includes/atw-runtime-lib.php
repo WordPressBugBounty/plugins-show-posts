@@ -1,5 +1,5 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) exit;
 // # Weaver SW Globals ==============================================================
 $atw_posts_opts_cache = false;	// internal cache for all settings
 
@@ -109,7 +109,7 @@ function atw_posts_get_qargs( $args, $opts ) {
                 $qargs['date_query'] = array ( array ('column' => 'post_date_gmt','after'=>'1 day ago'));
                 break;
             case 'this-week':
-                $qargs['year'] = date('Y') . '&w=' . date('W');
+                $qargs['year'] = gmdate('Y') . '&w=' . gmdate('W');
                 break;
             case 'past-week':
                 $qargs['date_query'] = array ( array ('column' => 'post_date_gmt','after'=>'1 week ago'));
@@ -120,7 +120,7 @@ function atw_posts_get_qargs( $args, $opts ) {
                 $qargs['date_query'] = array ( array ('column' => 'post_date_gmt','after'=>'1 month ago'));
                 break;
             case 'this-year':
-                $qargs['year'] = date('Y');
+                $qargs['year'] = gmdate('Y');
                 break;
             case 'past-365d':
                 $qargs['date_query'] = array ( array ('column' => 'post_date_gmt','after'=>'1 year ago'));

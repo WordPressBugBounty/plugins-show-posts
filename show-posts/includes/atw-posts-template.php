@@ -1,6 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
 // define a template to display a post
-
 
 /* Example template
 
@@ -265,9 +265,11 @@ function atw_posts_entry_meta() {
 
     $val = ' <div class="atw-entry-meta"> <div class="atw-entry-meta-icons">';
 
-    $val .= sprintf( __(
-'   <span class="entry-date">
-    <a href="%1$s" title="%2$s" rel="bookmark"><time datetime="%3$s" pubdate>%4$s</time></a>
+    // translators: %s is a name
+    //$author_name = sprintf( esc_attr(__( 'View all posts by %s','show-posts')), get_the_author() );
+
+    // translators: %x are urls or titles
+    $val .= sprintf( __('<span class="entry-date"><a href="%1$s" title="%2$s" rel="bookmark"><time datetime="%3$s" pubdate>%4$s</time></a>
    </span>
    <span class="by-author">
     <span class="author vcard">
@@ -279,7 +281,7 @@ function atw_posts_entry_meta() {
 		esc_attr( get_the_date( 'c' ) ),
 		esc_html( get_the_date() ),
 		esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
-		sprintf( esc_attr(__( 'View all posts by %s','show-posts')), get_the_author() ),
+		$author_name,
 		esc_html( get_the_author() )
 	);
 
@@ -330,8 +332,9 @@ function atw_posts_post_excerpt() {
 // ====================================== >>> atw_posts_post_title_link <<< ======================================
 
 function atw_posts_post_title_link() {
-    return '<a href="' . esc_url(get_permalink()) . '" title="' . esc_attr(sprintf( __( 'Permalink to %s','show-posts'),
-	   the_title_attribute( 'echo=0' ) )) . '" rel="bookmark">' .  get_the_title() . '</a>';
+    return get_the_title();
+   // return '<a href="' . esc_url(get_permalink()) . '" title="' . esc_attr(sprintf( __( 'Permalink to %s', 'show-posts'),
+	//   the_title_attribute( 'echo=0' ) )) . '" rel="bookmark">' .  get_the_title() . '</a>';
 }
 
 // ====================================== >>> atw_posts_post_wrap <<< ======================================
@@ -372,10 +375,10 @@ function atw_posts_get_comments_popup_link( $zero = false, $one = false, $more =
 	$id = get_the_ID();
     $val = '';
 
-	if ( false === $zero ) $zero = esc_html__( 'No Comments' );
-	if ( false === $one ) $one = esc_html__( '1 Comment' );
-	if ( false === $more ) $more = esc_html__( '% Comments' );
-	if ( false === $none ) $none = esc_html__( 'Comments Off' );
+	if ( false === $zero ) $zero = esc_html__( 'No Comments','show-posts' );
+	if ( false === $one ) $one = esc_html__( '1 Comment','show-posts' );
+	if ( false === $more ) $more = esc_html__( '% Comments','show-posts' );
+	if ( false === $none ) $none = esc_html__( 'Comments Off','show-posts' );
 
 	$number = get_comments_number( $id );
 
@@ -384,7 +387,7 @@ function atw_posts_get_comments_popup_link( $zero = false, $one = false, $more =
 	}
 
 	if ( post_password_required() ) {
-		return esc_html__('Enter your password to view comments.');
+		return esc_html__('Enter your password to view comments.','show-posts');
 	}
 
 	$val .= '<a href="';
@@ -408,7 +411,8 @@ function atw_posts_get_comments_popup_link( $zero = false, $one = false, $more =
 	}
 	$title = the_title_attribute( array('echo' => 0 ) );
 
-	$val .= ' title="' . esc_attr( sprintf( __('Comment on %s'), $title ) ) . '">';
+	// translators: %s is title
+    $val .= ' title="' . esc_attr( sprintf( __('Comment on %s','show-posts'), $title ) ) . '">';
 
     $number = get_comments_number();
 

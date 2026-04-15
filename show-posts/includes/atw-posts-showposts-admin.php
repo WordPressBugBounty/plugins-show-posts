@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
 // ========================================= >>> atw_posts_select_filter <<< ===============================
 function atw_posts_showposts_admin() {
     // admin for style options...
@@ -23,12 +24,12 @@ function atw_posts_showposts_admin() {
 </p>
 <p><span style="font-size:120%;font-weight:bold;">Shortcodes, using current <em>Filter</em> settings:</span> - You can Copy/Paste these.
 <table>
-    <tr><td>Shortcode using filter name:&nbsp;&nbsp;</td><td><strong>[show_posts filter=<?php echo atw_posts_getopt('current_filter'); ?>]</strong>
+    <tr><td>Shortcode using filter name:&nbsp;&nbsp;</td><td><strong>[show_posts filter=<?php echo  wp_kses_post(atw_posts_getopt('current_filter')); ?>]</strong>
     &nbsp;&nbsp;- You can also use the "Add [show_posts]" button on the Page/Post Editor.</td></tr>
     <tr><td>Shortcode using parameters:&nbsp;&nbsp; </td><td><strong>[show_posts
 <?php
     $params = atw_posts_get_filter_params();       // define in atw-runtime-lib.php
-    echo $params;
+    echo  wp_kses_post($params);
 ?>
 ]</strong></td></tr></table>
 </p>

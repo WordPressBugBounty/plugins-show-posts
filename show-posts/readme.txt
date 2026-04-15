@@ -1,15 +1,18 @@
 === Weaver Show Posts ===
-Plugin Name: Weaver Show Posts
+Plugin Name: Weaver Weaver Show Posts
 Plugin URI: http://weavertheme.com/plugins/
+Tags: weaver xtreme theme, shortcodes, widgets
 Author URI: http://weavertheme.com/about/
 Contributors: wpweaver
+Author: wpweaver
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Tags: weaver theme, settings, save, subthemes
 Text Domain: show-posts
-Requires at least: 7.2
-Tested up to: 6.3
-Stable tag: 1.8.1
+Requires at least: 6.6
+Requires PHP: 7.2
+Tested up to: 7.0
+Stable tag: 2.0
+
+Show Posts in a Page via shortcode for any theme
 
 == Description ==
 
@@ -56,8 +59,11 @@ Please use the WordPress Plugins:Install page to install this plugin.
 1. Define a filter that selects which posts you want. This can be by category, tag, date, and many other options.
 2. Add the shortcode [show_posts] wherever you want the posts to display.
 
-
 == Changelog ==
+= 2.0 =
+* Code refactoring to meet latest WordPress plugin standards
+* Dropping Support for Weaver Sliders plugin
+
 = 1.8.1 =
 * Fix: multisite permissions
 

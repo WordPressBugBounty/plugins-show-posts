@@ -1,5 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
 // ======================================================== filters admin ===============================
+
 function atw_posts_filters_admin()
 {
     ?>
@@ -126,7 +128,7 @@ function atw_posts_select_filter()
 
     <div class="filter-section">
         <div class="filter-title">&bull; Current Filter: <em
-                    style="font-size:150%;color:#CC2323;"><?php echo atw_posts_get_filter_opt('name'); ?></em>
+                    style="font-size:150%;color:#CC2323;"><?php echo  wp_kses_post(atw_posts_get_filter_opt('name')); ?></em>
             <span class="filter-title-description">Select a filter to define or edit </span></div>
         <?php
 
@@ -139,9 +141,9 @@ function atw_posts_select_filter()
             if ($filter == $current_filter) {
                 $cur_slug = $filter;
                 $cur_name = $val['name'];
-                echo '<option value="' . $filter . '" selected="selected">' . $val['name'] . ' (' . $filter . ')</option>';
+                echo '<option value="' . esc_attr($filter) . '" selected="selected">' . esc_html($val['name']) . ' (' . esc_html($filter) . ')</option>';
             } else {
-                echo '<option value="' . $filter . '">' . $val['name'] . ' (' . $filter . ')</option>';
+                echo  '<option value="' . esc_attr($filter)  . '">' . esc_html($val['name'])  . ' (' . esc_html($filter)  . ')</option>';
             }
         }
         echo '</select>';
@@ -163,7 +165,7 @@ function atw_posts_select_filter()
         </table>
         <?php
 
-        $time = date('Y-m-d-Hi');
+        $time = gmdate('Y-m-d-Hi');
 
         echo "<div style='margin-top:6px;'>\n";
 
@@ -188,7 +190,7 @@ function atw_posts_select_filter()
         <div style="margin-left:8em;">
             <span style="font-weight: bold; color:red;">File Upload Access Restriction: </span>
             Sorry, you must be a Multi-Site Super Admin or have the <em>install_plugins</em> capability set for your
-            account by a Super Admin to read settings files. (e.g., with the <em>User Role Editor</em> plugin.)</strong>
+            account to read settings files by a Super Admin. (e.g., with the <em>User Role Editor</em> plugin.)</strong>
         </div>
         <?php
     }
@@ -231,7 +233,7 @@ function atw_posts_select_filter()
     <table>
         <tr>
             <td>Shortcode using filter name:&nbsp;&nbsp;</td>
-            <td><strong>[show_posts filter=<?php echo $current_filter; ?>]</strong>
+            <td><strong>[show_posts filter=<?php echo  wp_kses_post($current_filter); ?>]</strong>
                 &nbsp;&nbsp;- You can also use the "Add [show_posts]" button on the Page/Post Editor.
             </td>
         </tr>
@@ -240,7 +242,7 @@ function atw_posts_select_filter()
             <td><strong>[show_posts
                     <?php
                     $params = atw_posts_get_filter_params();       // define in atw-runtime-lib.php
-                    echo $params;
+                    echo  wp_kses_post($params);
                     ?>
                     ]</strong></td>
         </tr>
@@ -410,14 +412,14 @@ function atw_posts_set_post_type()
                                     && $post_type != 'nav_menu_item'
                                     && $post_type != 'revision'
                                     && $post_type != 'attachment')
-                                    echo '<option value="' . $post_type . '">' . $post_type . '</option>';
+                                    echo  wp_kses_post('<option value="' . $post_type . '">' . $post_type . '</option>');
                             }
                             ?>
                         </select></td>
                     <td><input class="button filter-button" type="submit" name="atw_posts_add_post_type"
                                value="Add Post Type"/></td>
                     <td><textarea class="filter-text" cols=40 rows=1 placeholder="post_type=list" maxlength=128
-                                  name="post_type"><?php echo sanitize_text_field(atw_posts_get_filter_opt('post_type')); ?></textarea>
+                                  name="post_type"><?php echo  wp_kses_post(sanitize_text_field(atw_posts_get_filter_opt('post_type'))); ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -461,7 +463,7 @@ function atw_posts_set_post_cats()
                             $cats = get_categories();
 
                             foreach ($cats as $cat => $val) {
-                                echo '<option value="' . $val->slug . '">' . $val->name . ' (' . $val->slug . ')</option>';
+                                echo  wp_kses_post('<option value="' . $val->slug . '">' . $val->name . ' (' . $val->slug . ')</option>');
                             }
                             ?>
                         </select></td>
@@ -470,7 +472,7 @@ function atw_posts_set_post_cats()
                     <td><input class="button" type="submit" name="atw_posts_hide_category_name" value="Hide Category"/>
                     </td>
                     <td><textarea class="filter-text" cols=40 rows=1 placeholder="category_name=list" maxlength=128
-                                  name="category_name"><?php echo sanitize_text_field(atw_posts_get_filter_opt('category_name')); ?></textarea>
+                                  name="category_name"><?php  echo wp_kses_post( sanitize_text_field(atw_posts_get_filter_opt('category_name'))); ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -516,14 +518,14 @@ function atw_posts_set_post_tags()
                             $tags = get_tags();
 
                             foreach ($tags as $tag => $val) {
-                                echo '<option value="' . $val->slug . '">' . $val->name . ' (' . $val->slug . ')</option>';
+                                echo  wp_kses_post('<option value="' . $val->slug . '">' . $val->name . ' (' . $val->slug . ')</option>');
                             }
                             ?>
                         </select></td>
                     <td><input class="filter-button button" type="submit" name="atw_posts_add_tag" value="Add Tag"/>
                     </td>
                     <td><textarea class="filter-text" cols=40 rows=1 placeholder="tag=list" maxlength=128
-                                  name="tag"><?php echo sanitize_text_field(atw_posts_get_filter_opt('tag')); ?></textarea>
+                                  name="tag"><?php echo  wp_kses_post(sanitize_text_field(atw_posts_get_filter_opt('tag'))); ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -565,14 +567,14 @@ function atw_posts_set_slider_group()
 
                             $terms = get_terms('atw_slider_group');
                             foreach ($terms as $term) {
-                                echo '<option value="' . $term->slug . '">' . $term->name . ' (' . $term->slug . ')</option>';
+                                echo  wp_kses_post('<option value="' . $term->slug . '">' . $term->name . ' (' . $term->slug . ')</option>');
                             }
                             ?>
                         </select></td>
                     <td><input class="filter-button button" type="submit" name="atw_posts_add_group"
                                value="Add Slider Group"/></td>
                     <td><textarea class="filter-text" cols=40 rows=1 placeholder="atw_slider_group=list" maxlength=128
-                                  name="atw_slider_group"><?php echo sanitize_text_field(atw_posts_get_filter_opt('atw_slider_group')); ?></textarea>
+                                  name="atw_slider_group"><?php echo  wp_kses_post(sanitize_text_field(atw_posts_get_filter_opt('atw_slider_group'))); ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -622,14 +624,14 @@ function atw_posts_set_author()
                     <td><select class="filter-select" name="author_selection">
                             <?php
                             foreach ($authors as $author => $val) {
-                                echo '<option value="' . $val->ID . '">' . $val->display_name . ' (' . $val->ID . ')</option>';
+                                echo  wp_kses_post('<option value="' . $val->ID . '">' . $val->display_name . ' (' . $val->ID . ')</option>');
                             }
                             ?>
                         </select></td>
                     <td><input class="filter-button button" type="submit" name="atw_posts_add_author"
                                value="Add Author"/></td>
                     <td><textarea class="filter-text" cols=40 rows=1 placeholder="author=list" maxlength=128
-                                  name="author"><?php echo sanitize_text_field(atw_posts_get_filter_opt('author')); ?></textarea>
+                                  name="author"><?php echo  wp_kses_post(sanitize_text_field(atw_posts_get_filter_opt('author'))) ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -666,7 +668,7 @@ function atw_posts_set_by_posts()
 
         <div class="filter-opts">
             <textarea class="filter-text" cols=60 rows=1 placeholder="Post ID list" maxlength=512
-                      name="post_ids"><?php echo sanitize_text_field(atw_posts_get_filter_opt('post_ids')); ?></textarea>
+                      name="post_ids"><?php echo  wp_kses_post(sanitize_text_field(atw_posts_get_filter_opt('post_ids'))); ?></textarea>
 
         </div>
         <div class="filter-description">
@@ -698,7 +700,7 @@ function atw_posts_set_post_slug()
 
         <div class="filter-opts">
             <textarea class="filter-text" cols=40 rows=1 placeholder="page-title-slug" maxlength=512
-                      name="post_slug"><?php echo sanitize_text_field(atw_posts_get_filter_opt('post_slug')); ?></textarea>
+                      name="post_slug"><?php echo  wp_kses_post(sanitize_text_field(atw_posts_get_filter_opt('post_slug'))); ?></textarea>
 
         </div>
         <div class="filter-description">
@@ -737,14 +739,14 @@ function atw_posts_set_date()
                     <td><select class="filter-select" name="date_selection">
                             <?php
                             foreach ($dates as $date => $val) {
-                                echo '<option value="' . $val . '">' . $date . '</option>';
+                                echo  wp_kses_post('<option value="' . $val . '">' . $date . '</option>');
                             }
                             ?>
                         </select></td>
                     <td><input class="filter-button button" type="submit" name="atw_posts_add_date"
                                value="Select Date"/></td>
                     <td><textarea class="filter-text" cols=40 rows=1 placeholder="date=date-slug" maxlength=128
-                                  name="date"><?php echo sanitize_text_field(atw_posts_get_filter_opt('date')); ?></textarea>
+                                  name="date"><?php echo  wp_kses_post(sanitize_text_field(atw_posts_get_filter_opt('date'))); ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -789,7 +791,7 @@ function atw_posts_set_taxonomy()
                     if ($val->name == 'atw_slider_group')
                         continue;
                     $li_out = true;
-                    echo '<li><strong>Taxonomy name: </strong> &nbsp;<em>' . $val->label . '</em>&nbsp;&nbsp; (slug: ' . $val->name . ')';
+                    echo  wp_kses_post('<li><strong>Taxonomy name: </strong> &nbsp;<em>' . $val->label . '</em>&nbsp;&nbsp; (slug: ' . $val->name . ')');
                     $tax = $val->name;
                     $terms = get_terms($tax);
 
@@ -803,7 +805,7 @@ function atw_posts_set_taxonomy()
                             continue;
                         }
                         foreach ($terms as $term) {
-                            echo $lead;
+                            echo  wp_kses_post($lead);
                             $lead = ', ';
                             echo esc_attr($term->slug);
                         }
@@ -824,7 +826,7 @@ function atw_posts_set_taxonomy()
                         <td>Specify custom taxonomy parameters:</td>
                         <td><textarea class="filter-text" cols=60 rows=1
                                       placeholder="custom_taxonomy_name=custom_values_by_slug_list" maxlength=512
-                                      name="taxonomy"><?php echo sanitize_text_field(atw_posts_get_filter_opt('taxonomy')); ?></textarea>
+                                      name="taxonomy"><?php echo  wp_kses_post(sanitize_text_field(atw_posts_get_filter_opt('taxonomy'))); ?></textarea>
                         </td>
                     </tr>
                 </table>
@@ -926,7 +928,7 @@ if (WEAVER_SHOWPOSTS_TEMPLATE) {
             <div class="filter-opts">
 
                 <textarea class="filter-text" style="max-width:90%;" cols=100
-                          rows=<?php echo $rows; ?> placeholder="Enter post template" maxlength=2048
+                          rows=<?php echo esc_html($rows) ;?> placeholder="Enter post template" maxlength=2048
                 name="post_template"><?php echo esc_textarea($text); ?></textarea></td></tr></table>
             </div>
             <div class="filter-description">

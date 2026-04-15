@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
 // will down load current settings based on db setting
 // __ added - 12/11/14
     if ( !current_user_can( 'manage_options' ) ) {
@@ -14,21 +15,27 @@
 		exit;
 	}
 
-
-	@error_reporting(0);
-
 	$nonce = '';
 	$show_fn = '';
 	$ext = '';
 
-	if (isset($_GET['_wpnonce']))
-		$nonce = $_GET['_wpnonce'];
+	if (isset($_GET['_wpnonce'])) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $nonce = wp_unslash($_GET['_wpnonce']);
+    }
 
-	if (isset($_GET['_file']))
-		$show_fn = $_GET['_file'];
+	if (isset($_GET['_file'])) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$show_fn = wp_unslash($_GET['_file']);
+    }
 
-	if (isset($_GET['_ext']))
-		$ext = $_GET['_ext'];
+	if (isset($_GET['_ext'])) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$ext = wp_unslash($_GET['_ext']);
+    }
 
 	if ( !$nonce || !$show_fn || !$ext ) {
 		@header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
@@ -69,11 +76,13 @@
 
 	header('Content-Description: File Transfer');
 	header('Content-Type: application/octet-stream');
-	header('Content-Disposition: attachment; filename='. esc_html($show_fn) );
+	header('Content-Disposition: attachment; filename='. $show_fn);
 	header('Content-Transfer-Encoding: binary');
 	header('Expires: 0');
 	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 	header('Pragma: public');
 	header('Content-Length: ' . strlen($save_settings));
-	echo $save_settings;
-	exit;
+
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- binary serialized data, not HTML
+   echo $save_settings;
+   //exit;

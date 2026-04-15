@@ -1,4 +1,6 @@
 <?php
+// File refactored: 2026-03-29
+if ( ! defined( 'ABSPATH' ) ) exit;
 // ====================================== >>> atw_show_posts_shortcode <<< ======================================
 
 function atw_show_posts_shortcode($args = '')
@@ -140,7 +142,6 @@ function atw_show_posts_shortcode($args = '')
     if ($slider && function_exists('atw_slider_installed') && atw_posts_get_slider_opt('content_type', $slider) == 'images') {
         atw_slider_do_gallery($ourposts, $slider);
         // reset stuff
-        wp_reset_query();
         wp_reset_postdata();
         atw_trans_clear_all();
         $content .= ob_get_clean();    // get the output
@@ -154,7 +155,7 @@ function atw_show_posts_shortcode($args = '')
     if ($slider) {
         $style = '';
 
-        $slide_li_begin = '<div class="atwk-slide"><div class="slide-content slide-post"' . $style . '>' . "\n";
+        $slide_li_begin = '<div class="atwk-slide"><div class="slide-content slide-post"' . esc_attr($style) . '>' . "\n";
         $slide_li_end = "\n</div></div><!-- slide-content slide-post -->\n";
     }
 
@@ -172,7 +173,7 @@ function atw_show_posts_shortcode($args = '')
     $posts_out = 0;
     $col = 0;
     if (!$ourposts->have_posts()) {
-        echo apply_filters('wvr_show_posts_no_posts', esc_html__('No posts found.', 'atw_showposts'));
+        echo wp_kses_post(apply_filters('wvr_show_posts_no_posts', esc_html__('No posts found.', 'show-posts')));
     }
 
     if (WEAVER_SHOWPOSTS_TEMPLATE && atw_posts_get_filter_opt('post_template', $filter)) {
@@ -183,12 +184,15 @@ function atw_show_posts_shortcode($args = '')
         $ourposts->the_post();
         $posts_out++;
 
-        echo $slide_li_begin;
+        echo wp_kses_post($slide_li_begin);
 
         // aspen_per_post_style();
         if ($show == 'titlelist') {
             ?>
-            <li><a href="<?php the_permalink(); ?>" title="<?php printf(esc_attr(__('Permalink to %s', 'show-posts')),
+                // translators: shows the title
+            <li><a href="<?php the_permalink(); ?>" title="<?php
+                // translators: shows the title
+                printf(esc_attr(__('Permalink to %s', 'show-posts')),
                     the_title_attribute('echo=0')); ?>" rel="bookmark"><?php the_title(); ?></a></li>
             <?php
         } else {
@@ -199,7 +203,7 @@ function atw_show_posts_shortcode($args = '')
                     if (($col % 2) == 1) {    // force stuff to be even
                         $style = ' style="clear:left;"';
                     }
-                    echo('<div class="atw-content-2-col atw-cf"' . $style . '>' . "\n");
+                    echo('<div class="atw-content-2-col atw-cf"' . esc_attr($style) . '>' . "\n");
                     atw_show_content($slider, $filter);
                     echo("</div> <!-- atw-content-2-col -->\n");
 
@@ -210,7 +214,7 @@ function atw_show_posts_shortcode($args = '')
                     if (($col % 3) == 1) {    // force stuff to be even
                         $style = ' style="clear:left;"';
                     }
-                    echo('<div class="atw-content-3-col atw-cf"' . $style . '>' . "\n");
+                    echo('<div class="atw-content-3-col atw-cf"' . esc_attr($style) . '>' . "\n");
                     atw_show_content($slider, $filter);
                     echo("</div> <!-- atw-content-3-col -->\n");
 
@@ -222,7 +226,7 @@ function atw_show_posts_shortcode($args = '')
             }    // end switch $cols
         }
 
-        echo $slide_li_end;
+        echo wp_kses_post($slide_li_end);
 
     } // end loop
     if ($show == 'titlelist') {
@@ -244,12 +248,12 @@ function atw_show_posts_shortcode($args = '')
         <div id="atw-show-posts-navigation" class="atw-post-nav">
             <?php
             $big = 999999;
-            echo paginate_links(array(
+            echo wp_kses_post(paginate_links(array(
                 'base' => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
                 'format' => '?paged=%#%',
                 'current' => max(1, $qargs['paged']),
                 'total' => $ourposts->max_num_pages,
-            ));
+            )));
             ?>
         </div>
         <?php
@@ -262,7 +266,6 @@ function atw_show_posts_shortcode($args = '')
 
 
     // reset stuff
-    wp_reset_query();
     wp_reset_postdata();
     atw_trans_clear_all();
 
@@ -350,7 +353,9 @@ function atw_show_content($slider, $filter = '')
                 ?>
                 <hgroup class="atw-entry-hdr"><h2 class="atw-entry-title">
                         <a href="<?php the_permalink(); ?>"
-                           title="<?php printf(esc_attr(__('Permalink to %s', 'show-posts')),
+                           title="<?php
+                           // translators:%s is the title
+                           printf(esc_attr(__('Permalink to %s', 'show-posts')),
                                the_title_attribute('echo=0')); ?>" rel="bookmark"><?php the_title(); ?></a>
                     </h2></hgroup>
 
@@ -362,13 +367,14 @@ function atw_show_content($slider, $filter = '')
                 <div class="atw-entry-meta">
                     <div class="atw-entry-meta-icons">
                         <?php
-
-                        printf(__('<span class="entry-date"><a href="%1$s" title="%2$s" rel="bookmark"><time datetime="%3$s" pubdate>%4$s</time></a></span> <span class="by-author"><span class="author vcard"><a class="url fn n" href="%5$s" title="%6$s" rel="author">%7$s</a></span></span>', 'show-posts'),
+                        // translators: variables are HTML code
+                        printf( wp_kses_post(__('<span class="entry-date"><a href="%1$s" title="%2$s" rel="bookmark"><time datetime="%3$s" pubdate>%4$s</time></a></span> <span class="by-author"><span class="author vcard"><a class="url fn n" href="%5$s" title="%6$s" rel="author">%7$s</a></span></span>', 'show-posts')),
                             esc_url(get_permalink()),
                             esc_attr(get_the_time()),
                             esc_attr(get_the_date('c')),
                             esc_html(get_the_date()),
                             esc_url(get_author_posts_url(get_the_author_meta('ID'))),
+                            // translators: %s is author name
                             esc_attr(sprintf(__('View all posts by %s', 'show-posts'), get_the_author())),
                             esc_html(get_the_author())
                         );
@@ -385,7 +391,7 @@ function atw_show_content($slider, $filter = '')
         </header><!-- .atw-entry-header -->
         <?php
         if (atw_trans_get('show') == 'title') {
-            echo '</article><!-- #post-' . get_the_ID() . '-->';
+            echo  wp_kses_post('</article><!-- #post-' . get_the_ID() . '-->');
             atw_restore_the_content_filters($saved_the_content_filter_key);
 
             return;
@@ -395,14 +401,14 @@ function atw_show_content($slider, $filter = '')
 
             if (get_post_thumbnail_id()) {
                 //$image = wp_get_attachment_image_src( get_post_thumbnail_id( ), 'thumbnail' );        // (url, width, height)
-                //$href = $image[0];
+                //esc_url($href) = $image[0];
                 $href = get_permalink();
                 ?>
                 <p class='atw-featured-image'><a
-                            href="<?php echo $href; ?>"><?php esc_url(the_post_thumbnail('thumbnail')); ?></a></p>
+                            href="<?php echo esc_url($href); ?>"><?php esc_url(the_post_thumbnail('thumbnail')); ?></a></p>
                 <?php
             }
-            echo '</article><!-- #post-' . get_the_ID() . '-->';
+            echo  wp_kses_post('</article><!-- #post-' . get_the_ID() . '-->');
             atw_restore_the_content_filters($saved_the_content_filter_key);
 
             return;
@@ -436,7 +442,7 @@ function atw_show_content($slider, $filter = '')
                     if ($categories_list) { ?>
                         <span class="cat-links">
 <?php
-echo $categories_list;
+echo wp_kses_post($categories_list);
 ?>
 		    </span>
                         <?php
@@ -446,7 +452,7 @@ echo $categories_list;
                         ?>
                         <span class="tag-links">
 <?php
-echo $tags_list;
+echo wp_kses_post($tags_list);
 ?>
 			</span>
                         <?php
@@ -511,11 +517,11 @@ function atw_show_post_content($slider)
     // display a post - show thumbnail, link to full size image
     if (!atw_trans_get('hide_featured_image') && get_post_thumbnail_id()) {
         //$image = wp_get_attachment_image_src( get_post_thumbnail_id( ), 'full' );        // (url, width, height)
-        //$href = $image[0];
-        $href = get_permalink();
+        //esc_url($href) = $image[0];
+        $href = esc_url(get_permalink());
         ?>
         <span class='atw-featured-image'><a
-                    href="<?php echo $href; ?>"><?php the_post_thumbnail('thumbnail'); ?></a></span>
+                    href="<?php echo esc_url($href); ?>"><?php the_post_thumbnail('thumbnail'); ?></a></span>
         <?php
     }
 
@@ -523,8 +529,8 @@ function atw_show_post_content($slider)
 
     if ($slider && function_exists('atw_slider_set_pager_image')) {
         $image = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full');        // (url, width, height)
-        $href = $image[0];
-        if (!$href) {
+        $href = esc_url($image[0]);
+        if (!esc_url($href)) {
             $content = get_the_content($more);
         }
 
@@ -538,7 +544,7 @@ function atw_show_post_content($slider)
     if (atw_trans_get('show') == 'excerpt') {
         the_excerpt($more);
     } elseif ($content != '') {
-        echo $content;
+        echo wp_kses_post($content);
     } else {
         // atw_show_post_the_content( $more );
         atw_show_post_the_content($more);
@@ -557,5 +563,5 @@ function atw_show_post_the_content($more)
 
     $content = apply_filters('the_content', $content);
     //$content = str_replace( ']]>', ']]&gt;', $content );
-    echo $content;
+    echo wp_kses_post($content);
 }

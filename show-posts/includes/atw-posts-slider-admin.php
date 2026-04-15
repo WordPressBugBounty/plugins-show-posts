@@ -1,4 +1,5 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
 // ========================================= >>> atw_posts_select_filter <<< ===============================
 function atw_posts_slider_admin() {
     // admin for style options...
@@ -11,18 +12,8 @@ function atw_posts_slider_admin() {
    <h2 style="color:blue;">Weaver Show Sliders Plugin</h2>
 
 <p>
-    The Weaver <em>Show Sliders</em> plugin is an optional companion to <em>Weaver Show Posts</em> that
-    can display Posts and Images in a great looking responsive sliders that automatically resize to fit
-    the screen of any browser, tablet, or phone.
-    Unlike many other sliders, <em>Weaver Show Sliders</em> will display either Posts or Images. It uses the Filters tab to
-    select which posts or images will be included in the slider. You can easily specify the images included in the slider
-    using the standard WordPress Media Library Gallery tool, or use standard posts that contain images.
-    <em>Weaver Show Sliders</em> also includes a [gallery] shortcode replacement that will display galleries as a slide show.
-</p>
-<p>
-    <em>Weaver Show Sliders</em> has a free version available from the WordPress plugins collection that will meet the needs
-    of many users. There also is a Pro version with many more options to customize your sliders to get the exact look
-    and content you want to display, including Videos in a slider.
+    Our "The Weaver <em>Show Sliders</em> plugin" was recommended by previous versions of Weaver Show Posts, but it
+    is no longer a modern slider tool. We are not longer supporting it, and it is not recommended any longer.
 </p>
 <?php
 }

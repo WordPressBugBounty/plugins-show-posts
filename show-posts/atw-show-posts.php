@@ -1,16 +1,17 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
 /*
 Plugin Name: Weaver Show Posts
 Plugin URI: http://WeaverTheme.com
 Description: Weaver Show Posts - Show  posts or custom posts within your Theme's pages or posts using a shortcode and a form-based interface.
 Author: wpweaver
 Author URI: http://weavertheme.com/about/
-Version: 1.8.1
+Version: 2.0
 
-License: GPL
+License: GPLv2 or later
 
 Weaver Show Posts
-Copyright (C) 2014-2023, Bruce E. Wampler - weaver@weavertheme.com
+Copyright (C) 2014-2026, Bruce E. Wampler - weaver@weavertheme.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* CORE FUNCTIONS
 */
 
-const WEAVER_SHOWPOSTS_VERSION = '1.8.1';
+const WEAVER_SHOWPOSTS_VERSION = '2.0';
 const WEAVER_SHOWPOSTS_MINIFY = '.min';        // '' for dev, '.min' for production
 const WEAVER_SHOWPOSTS_TEMPLATE = false;      // future feature
 
@@ -62,12 +63,12 @@ function atw_posts_add_form_buttons(){
     $page = is_admin() ? get_current_screen() : null;
 
     if(  isset($page) && $page-> id!= 'atw_slider_post'  ) {
-        echo '<a href="#TB_inline?width=400&height=300&inlineId=select-show-posts-dialog" class="thickbox button" id="add_atw_posts_posts" title="' . esc_html__("Add [show_posts]", 'show-posts') . '"><span class="dashicons dashicons-admin-post"></span> ' . __("Add [show_posts]", 'show-posts') . '</a>';
+        echo  wp_kses_post('<a href="#TB_inline?width=400&height=300&inlineId=select-show-posts-dialog" class="thickbox button" id="add_atw_posts_posts" title="' . esc_html__("Add [show_posts]", 'show-posts') . '"><span class="dashicons dashicons-admin-post"></span> ' . __("Add [show_posts]", 'show-posts') . '</a>');
         add_action( 'admin_footer', 'atw_posts_select_posts_form' );
     }
 
     if ( function_exists( 'atw_slider_installed') && isset($page) && $page->id != 'atw_slider_post' ) {
-        echo '<a href="#TB_inline?width=400&height=300&inlineId=select-show-sliders-dialog" class="thickbox button" id="add_atw_slider_slidrs" title="' . esc_html__("Add [show_slider]", 'atw-slider') . '"><span class="dashicons dashicons-images-alt"></span></span> ' . __("Add [show_slider]", 'show-posts') . '</a>';
+        echo  wp_kses_post('<a href="#TB_inline?width=400&height=300&inlineId=select-show-sliders-dialog" class="thickbox button" id="add_atw_slider_slidrs" title="' . esc_html__("Add [show_slider]", 'show-posts') . '"><span class="dashicons dashicons-images-alt"></span></span> ' . __("Add [show_slider]", 'show-posts') . '</a>');
         add_action( 'admin_footer', 'atw_posts_select_slider_form' );
     }
 }
@@ -86,7 +87,7 @@ function atw_posts_select_posts_form() {
 
     echo '<label for="atw-slider-post-select">Select a filter: </label><select id="atw-slider-post-select" >';
     foreach ($filters as $filter => $val) {     // display dropdown of available filters
-            echo '<option value="'. $filter . '">' . $val['name'] .  ' (' . $filter . ')</option>';
+            echo  wp_kses_post('<option value="'. $filter . '">' . $val['name'] .  ' (' . $filter . ')</option>');
     }
     echo '</select>';
 ?>
@@ -113,7 +114,7 @@ function atw_posts_select_slider_form() {
 
     echo '<label for="atw-slider-slider-select">Select a Slider: </label><select id="atw-slider-slider-select" >';
     foreach ($sliders as $slider => $val) {     // display dropdown of available sliders
-        echo '<option value="'. $slider . '">' . $val['name'] .  ' (' . $slider . ')</option>';
+        echo  wp_kses_post('<option value="'. $slider . '">' . $val['name'] .  ' (' . $slider . ')</option>');
     }
     echo '</select>';
 ?>
@@ -172,17 +173,17 @@ function atw_posts_admin_scripts() {
     /* called only on the admin page, enqueue our special style sheet here (for tabbed pages) */
     wp_enqueue_style('atw_sw_Stylesheet', atw_posts_plugins_url('/atw-admin-style', WEAVER_SHOWPOSTS_MINIFY . '.css'), array(), WEAVER_SHOWPOSTS_VERSION);
 
-    wp_enqueue_script('atw_Yetii', atw_posts_plugins_url('/js/yetii/yetii',WEAVER_SHOWPOSTS_MINIFY.'.js'), array(),WEAVER_SHOWPOSTS_VERSION);
-    wp_enqueue_script('atw_Admin', atw_posts_plugins_url('/js/atw-posts-admin',WEAVER_SHOWPOSTS_MINIFY.'.js'), array(), WEAVER_SHOWPOSTS_VERSION);
+    // Yetii and atw-posts-admin need to be in header
+    wp_enqueue_script('atw_Yetii', atw_posts_plugins_url('/js/yetii/yetii',WEAVER_SHOWPOSTS_MINIFY.'.js'), array(),WEAVER_SHOWPOSTS_VERSION,false);
 
-
+    wp_enqueue_script('atw_Admin', atw_posts_plugins_url('/js/atw-posts-admin',WEAVER_SHOWPOSTS_MINIFY.'.js'), array(), WEAVER_SHOWPOSTS_VERSION, false);
 }
 
 function atw_posts_plugins_url($file,$ext='') {
     return plugins_url($file,__FILE__) . $ext;
 }
 
-// ############
+// ############\
 
 
 function atw_posts_enqueue_scripts() {	// enqueue runtime scripts
@@ -226,7 +227,7 @@ function atw_posts_emit_css() {
 			$esc_css = esc_html( $css );
 			$content = str_replace( '&gt;', '>', $esc_css ); // put these back
             $content = str_replace( '&lt;', '<', $esc_css ); // put these back
-			echo $content;
+			echo  wp_kses_post($content);
 			exit;
 	}
 }
@@ -243,7 +244,7 @@ function atw_posts_wp_head() {
 	$esc_css = esc_html( $css );
 	$content = str_replace( '&gt;', '>', $esc_css ); // put these back
     $content = str_replace( '&lt;', '<', $esc_css ); // put these back
-	echo $content;
+	echo  wp_kses_post($content);
 ?>
 </style>
 <?php
