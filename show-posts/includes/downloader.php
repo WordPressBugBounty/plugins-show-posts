@@ -1,88 +1,77 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit;
+//
+//	$wp_root = dirname(__FILE__) .'/../../../../';
 // will down load current settings based on db setting
 // __ added - 12/11/14
-    if ( !current_user_can( 'manage_options' ) ) {
-        exit;
+// __ regressed to this version for 2.0...
+
+
+if (! defined( 'ABSPATH' ) ) {
+    if ( ! defined( 'ABSPATH' ) ) {
+        if ( defined( 'SHOW_POSTS_WP_DEPTH' ) ) {
+            require_once dirname( __FILE__, 'SHOW_POSTS_WP_DEPTH' ) . '/wp-load.php';
+        } else {
+            require_once dirname( __FILE__, 5 ) . '/wp-load.php';
+        }
     }
+}
 
-	$wp_root = dirname(__FILE__) .'/../../../../';
-	if(file_exists($wp_root . 'wp-load.php')) {
-		require_once($wp_root . "wp-load.php");
-	} else if(file_exists($wp_root . 'wp-config.php')) {
-		require_once($wp_root . "wp-config.php");
-	} else {
-		exit;
-	}
+// can only check this now after above code set ABSPATH...
+//if (!defined('ABSPATH')) exit;
 
-	$nonce = '';
-	$show_fn = '';
-	$ext = '';
+//@error_reporting(0);
 
-	if (isset($_GET['_wpnonce'])) {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        // phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $nonce = wp_unslash($_GET['_wpnonce']);
-    }
+$nonce = isset($_GET['_wpnonce']) ? sanitize_text_field(wp_unslash($_GET['_wpnonce'])) : '';
+$show_fn = isset($_GET['_file']) ? sanitize_file_name(wp_unslash($_GET['_file'])) : '';
+$ext = isset($_GET['_ext']) ? sanitize_text_field(wp_unslash($_GET['_ext'])) : '';
 
-	if (isset($_GET['_file'])) {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        // phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$show_fn = wp_unslash($_GET['_file']);
-    }
+if (!$nonce || !$show_fn || !$ext) {
+    @header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
+    wp_die(esc_html__('Sorry - invalid download', 'show-posts' /*adm*/));
+}
 
-	if (isset($_GET['_ext'])) {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        // phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$ext = wp_unslash($_GET['_ext']);
-    }
+if (!wp_verify_nonce($nonce, 'show_posts_download')) {
+    @header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
+    wp_die(esc_html__('Sorry - download must be initiated from admin panel.', 'show-posts' /*adm*/) . ':' . esc_html($nonce));
+}
 
-	if ( !$nonce || !$show_fn || !$ext ) {
-		@header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
-		wp_die(esc_html__('Sorry - invalid download','show-posts' /*adm*/));
-	}
+if (headers_sent()) {
+    @header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
+    wp_die(esc_html__('Headers Sent: The headers have been sent by another plugin - there may be a plugin conflict.', 'show-posts' /*adm*/));
+}
 
-	if (! wp_verify_nonce($nonce, 'show_posts_download')) {
-		@header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
-		wp_die(esc_html__('Sorry - download must be initiated from admin panel.','show-posts' /*adm*/) . ':' . esc_html($nonce));
-	}
+//@header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
+//wp_die("Ready to download: {$show_fn} - ext: {$ext}");
 
-	if (headers_sent()) {
-		@header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
-		wp_die(esc_html__('Headers Sent: The headers have been sent by another plugin - there may be a plugin conflict.','show-posts' /*adm*/));
-	}
+$show_opts = get_option('atw_posts_settings', array());
 
-    //@header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
-	//wp_die("Ready to download: {$show_fn} - ext: {$ext}");
+if ($ext == 'filter') {
+    $save = array();
+    $cur_filter = $show_opts['current_filter'];
+    $save['cur_filter'] = $cur_filter;
+    $save[$cur_filter] = $show_opts['filters'][$cur_filter];
+} elseif ($ext == 'slider') {
+    $save = array();
+    $cur_slider = $show_opts['current_slider'];
+    $save['cur_slider'] = $cur_slider;
+    $save[$cur_slider] = $show_opts['sliders'][$cur_slider];
+} else {
+    @header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
+    wp_die(esc_html("Error - trying to save invalid type of settings: " . $ext ). '.');
+}
 
-	$show_opts = get_option('atw_posts_settings' ,array());
+$save_settings = serialize($save);
 
-	if ( $ext == 'filter' ) {
-		$save = array();
-		$cur_filter = $show_opts['current_filter'];
-		$save['cur_filter'] = $cur_filter;
-		$save[$cur_filter] = $show_opts['filters'][$cur_filter];
-	} elseif ($ext == 'slider' ) {
-		$save = array();
-		$cur_slider = $show_opts['current_slider'];
-		$save['cur_slider'] = $cur_slider;
-		$save[$cur_slider] = $show_opts['sliders'][$cur_slider];
-	} else {
-		@header('Content-Type: ' . get_option('html_type') . '; charset=' . get_option('blog_charset'));
-		wp_die("Error - trying to save invalid type of settings: " . esc_html( $ext ) . '.');
-	}
-
-	$save_settings = serialize($save);
-
-	header('Content-Description: File Transfer');
-	header('Content-Type: application/octet-stream');
-	header('Content-Disposition: attachment; filename='. $show_fn);
-	header('Content-Transfer-Encoding: binary');
-	header('Expires: 0');
-	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-	header('Pragma: public');
-	header('Content-Length: ' . strlen($save_settings));
+header('Content-Description: File Transfer');
+header('Content-Type: application/octet-stream');
+header('Content-Disposition: attachment; filename=' . $show_fn);
+header('Content-Transfer-Encoding: binary');
+header('Expires: 0');
+header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+header('Pragma: public');
+header('Content-Length: ' . strlen($save_settings));
 
 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- binary serialized data, not HTML
-   echo $save_settings;
-   //exit;
+echo $save_settings;
+exit;
+

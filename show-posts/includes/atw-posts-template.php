@@ -266,7 +266,7 @@ function atw_posts_entry_meta() {
     $val = ' <div class="atw-entry-meta"> <div class="atw-entry-meta-icons">';
 
     // translators: %s is a name
-    //$author_name = sprintf( esc_attr(__( 'View all posts by %s','show-posts')), get_the_author() );
+    $author_name = sprintf(__( 'View all posts by %s','show-posts'), get_the_author() );
 
     // translators: %x are urls or titles
     $val .= sprintf( __('<span class="entry-date"><a href="%1$s" title="%2$s" rel="bookmark"><time datetime="%3$s" pubdate>%4$s</time></a>
@@ -281,7 +281,7 @@ function atw_posts_entry_meta() {
 		esc_attr( get_the_date( 'c' ) ),
 		esc_html( get_the_date() ),
 		esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
-		$author_name,
+		esc_attr($author_name),
 		esc_html( get_the_author() )
 	);
 

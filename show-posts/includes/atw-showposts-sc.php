@@ -189,7 +189,6 @@ function atw_show_posts_shortcode($args = '')
         // aspen_per_post_style();
         if ($show == 'titlelist') {
             ?>
-                // translators: shows the title
             <li><a href="<?php the_permalink(); ?>" title="<?php
                 // translators: shows the title
                 printf(esc_attr(__('Permalink to %s', 'show-posts')),

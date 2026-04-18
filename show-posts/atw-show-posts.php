@@ -6,7 +6,7 @@ Plugin URI: http://WeaverTheme.com
 Description: Weaver Show Posts - Show  posts or custom posts within your Theme's pages or posts using a shortcode and a form-based interface.
 Author: wpweaver
 Author URI: http://weavertheme.com/about/
-Version: 2.0
+Version: 2.0.3
 
 License: GPLv2 or later
 
@@ -62,7 +62,8 @@ add_action( 'plugins_loaded', 'atw_posts_plugins_loaded');
 function atw_posts_add_form_buttons(){
     $page = is_admin() ? get_current_screen() : null;
 
-    if(  isset($page) && $page-> id!= 'atw_slider_post'  ) {
+    // this is the pop-up show_posts box from the editor
+    if (  isset($page) && $page-> id!= 'atw_slider_post'  ) {
         echo  wp_kses_post('<a href="#TB_inline?width=400&height=300&inlineId=select-show-posts-dialog" class="thickbox button" id="add_atw_posts_posts" title="' . esc_html__("Add [show_posts]", 'show-posts') . '"><span class="dashicons dashicons-admin-post"></span> ' . __("Add [show_posts]", 'show-posts') . '</a>');
         add_action( 'admin_footer', 'atw_posts_select_posts_form' );
     }
@@ -74,7 +75,7 @@ function atw_posts_add_form_buttons(){
 }
 
 /**
-* Displays the Insert a [show_posts] Selector
+* Displays the Insert a [show_posts] Selector into the post editor
 */
 function atw_posts_select_posts_form() {
     atw_posts_select_scripts_and_styles();
@@ -87,7 +88,8 @@ function atw_posts_select_posts_form() {
 
     echo '<label for="atw-slider-post-select">Select a filter: </label><select id="atw-slider-post-select" >';
     foreach ($filters as $filter => $val) {     // display dropdown of available filters
-            echo  wp_kses_post('<option value="'. $filter . '">' . $val['name'] .  ' (' . $filter . ')</option>');
+        //
+        echo  '<option value=' . esc_attr($filter) . '>' . esc_html($val['name']) . '</option>';
     }
     echo '</select>';
 ?>

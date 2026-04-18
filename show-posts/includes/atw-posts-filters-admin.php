@@ -136,6 +136,8 @@ function atw_posts_select_filter()
         $cur_slug = '';
         $cur_name = '';
 
+        // Displays Select Filter on Filters tab of interface
+
         echo '<table><tr><td><strong>Select Filter: </strong></td><td><select name="selected_filter" onchange="this.form.submit()">';
         foreach ($filters as $filter => $val) {     // display dropdown of available filters
             if ($filter == $current_filter) {
@@ -180,8 +182,7 @@ function atw_posts_select_filter()
         <div>
             <input style="margin-left:8em;" class="download-link" type="submit" name="atw_posts_restore_filter"
                    value="Restore Filter"/>
-            <span style="border:1px solid #CCC;width:400px;padding:2px;"><input name="post_uploaded"
-                                                                                type="file"/></span>
+            <span style="border:1px solid #CCC;width:400px;padding:2px;"><input name="post_uploaded" type="file"/></span>
             <input type="hidden" name="uploadit" value="yes"/>- Upload file to restore a filter
         </div>
         <?php
