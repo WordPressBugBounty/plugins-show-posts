@@ -6,7 +6,7 @@ Plugin URI: http://WeaverTheme.com
 Description: Weaver Show Posts - Show  posts or custom posts within your Theme's pages or posts using a shortcode and a form-based interface.
 Author: wpweaver
 Author URI: http://weavertheme.com/about/
-Version: 2.0.3
+Version: 2.0.4
 
 License: GPLv2 or later
 
@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* CORE FUNCTIONS
 */
 
-const WEAVER_SHOWPOSTS_VERSION = '2.0';
+const WEAVER_SHOWPOSTS_VERSION = '2.0.4';
 const WEAVER_SHOWPOSTS_MINIFY = '.min';        // '' for dev, '.min' for production
 const WEAVER_SHOWPOSTS_TEMPLATE = false;      // future feature
 
@@ -116,7 +116,7 @@ function atw_posts_select_slider_form() {
 
     echo '<label for="atw-slider-slider-select">Select a Slider: </label><select id="atw-slider-slider-select" >';
     foreach ($sliders as $slider => $val) {     // display dropdown of available sliders
-        echo  wp_kses_post('<option value="'. $slider . '">' . $val['name'] .  ' (' . $slider . ')</option>');
+        echo  '<option value="'. esc_attr($slider) . '">' . esc_attr($val['name']) .  ' (' . esc_attr($slider) . ')</option>';
     }
     echo '</select>';
 ?>

@@ -58,8 +58,6 @@ class WeaverSP_Widget_Text extends WP_Widget {
 
         $posts = atw_posts_getopt('filters');
 
-
-
         // If no menus exists, direct the user to go and create some.
         if ( empty($posts)  ) {
             echo '<p>' . 'No Post Filters have been created yet. Create some on the <em>Weaver Posts (& Slider Options) -> Filters</em> admin menu.' .'</p>';
@@ -77,7 +75,7 @@ class WeaverSP_Widget_Text extends WP_Widget {
                 <?php
                 foreach ( $posts as $post) {
                     $selected = $post_list == $post['slug'] ? ' selected="selected"' : '';
-                    echo '<option' . wp_kses_post($selected) . ' value="' . esc_attr($post['slug']) . '">' . esc_html($post['name']) . '</option>';
+                    echo '<option' . esc_attr($selected) . ' value="' . esc_attr($post['slug']) . '">' . esc_attr($post['name']) . '</option>';
                 }
                 ?>
             </select>

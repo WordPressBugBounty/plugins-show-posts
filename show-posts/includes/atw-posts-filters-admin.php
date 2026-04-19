@@ -298,7 +298,7 @@ function atw_posts_define_display()
 
                 <div style="padding:1em 0 .5em 4em;text-indent:-1.7em;">Display posts as: &nbsp;&nbsp;
                     <select name="show">
-                        <option value="" <?php selected($cur_show == ''); ?>></option>
+                        <option value=" "<?php selected($cur_show == ''); ?>></option>
                         <option value="full" <?php selected($cur_show == 'full'); ?>>Full post</option>
                         <option value="excerpt" <?php selected($cur_show == 'excerpt'); ?>>Excerpt</option>
                         <option value="title" <?php selected($cur_show == 'title'); ?>>Title + Top Meta Line</option>
@@ -413,7 +413,7 @@ function atw_posts_set_post_type()
                                     && $post_type != 'nav_menu_item'
                                     && $post_type != 'revision'
                                     && $post_type != 'attachment')
-                                    echo  wp_kses_post('<option value="' . $post_type . '">' . $post_type . '</option>');
+                                    echo  '<option value="' . esc_attr($post_type) . '">' . esc_attr($post_type) . '</option>';
                             }
                             ?>
                         </select></td>
@@ -464,7 +464,7 @@ function atw_posts_set_post_cats()
                             $cats = get_categories();
 
                             foreach ($cats as $cat => $val) {
-                                echo  wp_kses_post('<option value="' . $val->slug . '">' . $val->name . ' (' . $val->slug . ')</option>');
+                                echo  '<option value="' . esc_attr($val->slug) . '">' . esc_attr($val->name) . ' (' . esc_attr($val->slug) . ')</option>';
                             }
                             ?>
                         </select></td>
@@ -519,7 +519,7 @@ function atw_posts_set_post_tags()
                             $tags = get_tags();
 
                             foreach ($tags as $tag => $val) {
-                                echo  wp_kses_post('<option value="' . $val->slug . '">' . $val->name . ' (' . $val->slug . ')</option>');
+                                echo '<option value="' . esc_attr($val->slug) . '">' . esc_attr($val->name) . ' (' . esc_attr($val->slug) . ')</option>';
                             }
                             ?>
                         </select></td>
@@ -568,7 +568,7 @@ function atw_posts_set_slider_group()
 
                             $terms = get_terms('atw_slider_group');
                             foreach ($terms as $term) {
-                                echo  wp_kses_post('<option value="' . $term->slug . '">' . $term->name . ' (' . $term->slug . ')</option>');
+                                echo '<option value="' . esc_attr($term->slug) . '">' . esc_attr($term->name) . ' (' . esc_attr($term->slug) . ')</option>';
                             }
                             ?>
                         </select></td>
@@ -625,7 +625,7 @@ function atw_posts_set_author()
                     <td><select class="filter-select" name="author_selection">
                             <?php
                             foreach ($authors as $author => $val) {
-                                echo  wp_kses_post('<option value="' . $val->ID . '">' . $val->display_name . ' (' . $val->ID . ')</option>');
+                                echo  '<option value="' . esc_attr($val->ID) . '">' . esc_attr($val->display_name ). ' (' . esc_attr($val->ID) . ')</option>';
                             }
                             ?>
                         </select></td>
@@ -740,7 +740,7 @@ function atw_posts_set_date()
                     <td><select class="filter-select" name="date_selection">
                             <?php
                             foreach ($dates as $date => $val) {
-                                echo  wp_kses_post('<option value="' . $val . '">' . $date . '</option>');
+                                echo  '<option value="' . esc_attr($val) . '">' . esc_attr($date) . '</option>';
                             }
                             ?>
                         </select></td>
@@ -776,7 +776,7 @@ function atw_posts_set_taxonomy()
     //<!-- *** Custom Taxonomies *** -->
     ?>
     <div class="filter-section">
-        <div class="filter-title">&bull; Custom Taxonomies <span class="filter-title-description">Manual specification of Custom Taxonomies</span>
+        <div class="filter-title">&bull; Custom Taxonomies (Advanced Option) <span class="filter-title-description">Manual specification of Custom Taxonomies</span>
         </div>
 
         <div class="filter-opts">
@@ -815,7 +815,7 @@ function atw_posts_set_taxonomy()
                     echo '</li>';
                 }
                 if (!$li_out) {
-                    echo '<li>No custom taxonomies defined for this site.</li>';
+                    echo '<li>No custom taxonomies defined for this site. You can use a plugin to create your own. Show Posts does not create taxnomies.</li>';
                 }
                 echo '</ul>';
             }

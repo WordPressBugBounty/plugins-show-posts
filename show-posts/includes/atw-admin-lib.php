@@ -17,10 +17,59 @@ function atw_posts_save_msg($msg)
             '</strong></p></div>');
 }
 
-function atw_posts_error_msg($msg)
+/*function atw_posts_error_msg($msg)
 {
     echo '<div id="message" class="updated fade" style="background:#F88;" style="width:70%;"><p><strong>' . esc_html($msg) .
             '</strong></p></div>';
+}*/
+function atw_posts_error_msg( $msg ) {
+    // shows error message in popup
+    ?>
+    <div id="atw-msg-overlay" style="
+        position:fixed;
+        top:0; left:0;
+        width:100%; height:100%;
+        background:rgba(0,0,0,0.5);
+        z-index:9999;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    ">
+        <div style="
+            background:#fff5f5;
+            padding:20px;
+            //border:2px solid #A00;
+            max-width:500px;
+            width:60%;
+            box-shadow:0 0 20px rgba(0,0,0,0.5);
+            text-align:center;
+            overlay:background:rgba(0,0,0,0.4);
+            popup:background:#fff5f5;
+            border:2px solid #cc0000;
+        ">
+            <div style="margin-bottom:15px; font-weight:bold; color:#A00;">
+                <?php echo esc_html( $msg ); ?>
+            </div>
+
+            <button id="atw-msg-close" class="button button-primary">
+                Dismiss
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var btn = document.getElementById("atw-msg-close");
+            var overlay = document.getElementById("atw-msg-overlay");
+
+            if (btn && overlay) {
+                btn.addEventListener("click", function () {
+                    overlay.style.display = "none";
+                });
+            }
+        });
+    </script>
+    <?php
 }
 
 function atw_media_lib_button($fillin = '')
@@ -38,7 +87,7 @@ function atw_posts_download_link($desc, $filebase, $ext, $time)
 {
     $nonce = wp_create_nonce('show_posts_download');
 
-    $downloader = plugins_url() . '/show-posts/includes/downloader.php';
+    $downloader = plugins_url() . '/show-posts/includes/atw-downloader.php';
     $download_img_path = plugins_url() . '/show-posts/images/download.png';
     $filename = "{$filebase}-{$time}.{$ext}";
     $href = $downloader . "?_wpnonce={$nonce}&_ext={$ext}&_file={$filename}";
