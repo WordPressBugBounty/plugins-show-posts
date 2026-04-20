@@ -10,7 +10,7 @@ Text Domain: show-posts
 Requires at least: 6.6
 Requires PHP: 7.2
 Tested up to: 7.0
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 
 Show Posts in a Page via shortcode for any theme
 
@@ -60,6 +60,9 @@ Please use the WordPress Plugins:Install page to install this plugin.
 2. Add the shortcode [show_posts] wherever you want the posts to display.
 
 == Changelog ==
+= 2.0.5 =
+* Fixed SP svn error for atw_downloader.php - save settings will word now
+
 = 2.0.4 =
 * Fixed issues with list of choices in Filters tab
 * Add auto return to option location on Filters interface after setting

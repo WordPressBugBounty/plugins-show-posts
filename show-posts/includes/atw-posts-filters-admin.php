@@ -565,15 +565,17 @@ function atw_posts_set_slider_group()
                 <tr>
                     <td><select class="filter-select" name="group_selection">
                             <?php
-
+                            $sgroups = 0;
                             $terms = get_terms('atw_slider_group');
                             foreach ($terms as $term) {
+                                $sgroups++;
                                 echo '<option value="' . esc_attr($term->slug) . '">' . esc_attr($term->name) . ' (' . esc_attr($term->slug) . ')</option>';
                             }
                             ?>
                         </select></td>
                     <td><input class="filter-button button" type="submit" name="atw_posts_add_group"
                                value="Add Slider Group"/></td>
+
                     <td><textarea class="filter-text" cols=40 rows=1 placeholder="atw_slider_group=list" maxlength=128
                                   name="atw_slider_group"><?php echo  wp_kses_post(sanitize_text_field(atw_posts_get_filter_opt('atw_slider_group'))); ?></textarea>
                     </td>
@@ -583,6 +585,9 @@ function atw_posts_set_slider_group()
             atw_posts_nonce_field('atw_posts_add_group');
             ?>
         </div>
+        <?php if ($sgroups == 0) {
+            echo 'Note: No Test Groups Defined... ';
+        } ?>
         <div class="filter-description">
             Specify the <em>Slider Group</em> slug to display posts from that slider group. Include a group by selecting
             the group from the drop-down list,

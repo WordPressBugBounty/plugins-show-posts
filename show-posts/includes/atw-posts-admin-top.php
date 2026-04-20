@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /*
 
-This code is Copyright 2011-2016 by Bruce E. Wampler, all rights reserved.
+This code is Copyright 2011-2026 by Bruce E. Wampler, all rights reserved.
 This code is licensed under the terms of the accompanying license file: license.txt.
 
 This program is distributed in the hope that it will be useful,
@@ -322,8 +322,6 @@ function atw_posts_duplicate_filter() {
     atw_posts_save_msg('Filter Duplicated: "' . $name . '" (Slug: <em>' . $slug . '</em>)');
     return true;
 }
-
-
 
 function atw_posts_new_filter() {
     $name = sanitize_text_field( atw_posts_get_POST ( 'filter_name' ) );
